@@ -1,0 +1,34 @@
+{
+    "models" : [
+        {
+            "identifier" : "string",
+            "start" : "\"",
+            "double" : false
+        },
+        {
+            "identifier" : "string",
+            "start" : "'",
+            "double" : false
+        },
+        {
+            "identifier" : "brackets",
+            "start" : "{",
+            "end": "}",
+            "double" : true
+        },
+        {
+            "identifier" : "parentheses",
+            "start" : "(",
+            "end": ")",
+            "double" : true
+        }
+    ],
+    "keywords" : [
+        "def",
+        "for",
+        "del"
+    ],
+    "operators" : [
+        "+", "-", "*", "/"
+    ]
+}

@@ -1,0 +1,4 @@
+.log
+debug.tmp
+__pycache__/
+*.pyc

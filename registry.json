@@ -1,0 +1,7 @@
+{
+    "KeywordRegistry" : {
+        "log" : "OutputNode",
+        "if" : "IfNode",
+        "def" : "AssignNode"
+    }
+}

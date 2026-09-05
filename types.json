@@ -26,9 +26,15 @@
     "keywords" : [
         "def",
         "for",
-        "del"
+        "del",
+        "if",
+        "else",
+        "log"
     ],
     "operators" : [
         "+", "-", "*", "/"
+    ],
+    "operands" : [
+        "=", ">", "<"
     ]
 }

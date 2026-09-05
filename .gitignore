@@ -2,3 +2,5 @@
 debug.tmp
 __pycache__/
 *.pyc
+.vscode/
+expressionparser.py

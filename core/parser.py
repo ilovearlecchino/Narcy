@@ -30,7 +30,7 @@ def Eof_Safe(func):
             return Token('eof', 'eof')
     return wrapper
     
-class BaseParser:
+class AbstractParser:
     def __init__(self, tokens):
         self.index = 0
         self.tokens = tokens
@@ -49,45 +49,65 @@ class BaseParser:
         self.index += 1
         return tok
 
-class ExpressionAnalyzer(BaseParser):
-    def convert_into_expressions(self):
+class Chunker(AbstractParser):
+    def __init__(self, tokens, allowed_types, result_node, min_length=2):
+        super().__init__(tokens)
+        self.allowed_types = allowed_types
+        self.result_node = result_node
+        self.min_length = min_length
+
+    def get_token_type(self, tok):
+        if hasattr(tok, 'get_type'):
+            return tok.get_type()
+        return getattr(tok, 'type', None)
+
+    def _flush_expr(self, expr_list, target_list):
+        """Wraps in result_node if min_length is met; otherwise unpacks directly."""
+        if not expr_list:
+            return
+        if len(expr_list) >= self.min_length:
+            target_list.append(self.result_node(expr_list.copy()))
+        else:
+            # Below min_length: restore original items directly
+            target_list.extend(expr_list)
+
+    def chunk(self):
         _TOKS = []
         _EXPR = []
         _TOK = self.advance()
 
-        while _TOK.type != 'eof':
-            if _TOK.type in _EXPRESSION_ALLOWED_TYPES:
-                if self.peek().type in _EXPRESSION_ALLOWED_TYPES:
-                    _EXPR.append(_TOK)
-                else:
-                    if not _EXPR:
-                        # Single isolated token, append directly
-                        _TOKS.append(_TOK)
-                    else:
-                        # Append final token in sequence and create expression node
-                        _EXPR.append(_TOK)
-                        _TOKS.append(ExpressionNode(_EXPR))
-                        _EXPR = []
+        while self.get_token_type(_TOK) != 'eof':
+            tok_type = self.get_token_type(_TOK)
+
+            if tok_type in self.allowed_types:
+                _EXPR.append(_TOK)
+                # If next item stops matching, attempt flush
+                if self.get_token_type(self.peek()) not in self.allowed_types:
+                    self._flush_expr(_EXPR, _TOKS)
+                    _EXPR = []
             else:
+                if _EXPR:
+                    self._flush_expr(_EXPR, _TOKS)
+                    _EXPR = []
                 _TOKS.append(_TOK)
 
             _TOK = self.advance()
 
-        _TOKS.append(Token('eof', 'eof'))
+        # Handle any remaining buffer at end of sequence
+        if _EXPR:
+            self._flush_expr(_EXPR, _TOKS)
+
         return _TOKS
-                    
 
-def _INFIX_BP(operator : Token):
-    try:
-        return _OPERATOR_BP[operator.token]
-    except KeyError:
-        raise BadToken(f"""Unrecognized operator: {operator.token}""")
-
-    
+_ABSTRACTIONS = [
+    (_EXPRESSION_ALLOWED_TYPES, ExpressionNode, 2),
+    (_EXPRESSION_ALLOWED_TYPES | {'expression'}, ValueHolderNode, 1)
+]
 
 def module_execute(args):
     CurrentNode = None
     args.append(Token('eof', 'eof'))
-    args = ExpressionAnalyzer(args).convert_into_expressions()
+    for types, node, min in _ABSTRACTIONS:
+        args = Chunker(args, types, node, min).chunk()
     pprint(args)
     return args

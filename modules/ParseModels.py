@@ -4,14 +4,20 @@ from typing import Optional, List
 @dataclass
 class ExpressionNode:
     value : list
+    type : str = "expression"
 
 @dataclass
-class LiteralNode:
+class ValueHolderNode:
     value : object
+    type : str = "valueholder"
 
-@dataclass
-class VariableNode:
-    name: str
+    
+    def __post_init__(self):
+        """I noticed that the chunker returns a list of items due to the way it is designed
+        this function ensures that the value is not a list as it's not meant to hold a list.
+        """
+        if isinstance(self.value, list) and len(self.value) == 1:
+            self.value = self.value[0]
 
 @dataclass
 class BinaryOperationNode:
@@ -36,11 +42,10 @@ class IfNode:
 
 Nodes = {
     ExpressionNode,
-    LiteralNode,
-    VariableNode,
     BinaryOperationNode,
     AssignNode,
     OutputNode,
+    ValueHolderNode,
     IfNode
 }
 

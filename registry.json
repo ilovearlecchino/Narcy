@@ -4,9 +4,8 @@
         "if" : "IfNode",
         "def" : "AssignNode"
     },
-    "Patterns" : {
-        "log" : ["ValueHolder"],
-        "def" : ["Statement", "Operand", "ValueHolder"],
-        "if" : ["Condition", "Brackets"]
-    }
+
+    "TDRDPMatchLookup" : [
+        {"OutputNode" : ["log", "ValueHolder"]}
+    ]
 }

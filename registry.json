@@ -6,6 +6,12 @@
     },
 
     "TDRDPMatchLookup" : [
-        {"OutputNode" : ["log", "ValueHolder"]}
+        {"OutputNode" : ["valueholder"]},
+        {"AssignNode" : ["valueholder", "operand", "valueholder"]}
+    ],
+
+    "StaticTypes" : [
+        "statement",
+        "keyword"
     ]
 }

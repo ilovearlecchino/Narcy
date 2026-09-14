@@ -1,0 +1,23 @@
+{
+    "TreeModels" : [
+        {
+            "ID" : "AssignNode",
+            "InputConfig" : {
+                "attributes" : {
+                    "name" : 0,
+                    "value" : 2
+                },
+                "total_length" : 3
+            }
+        },
+        {
+            "ID" : "OutputNode",
+            "InputConfig" : {
+                "attributes" : {
+                    "value" : 0
+                },
+                "total_length" : 1
+            }
+        }
+    ]
+}

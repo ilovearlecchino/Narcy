@@ -1,6 +1,10 @@
 import sys
 import importlib
+from datetime import datetime
 
+
+
+VERSION = "0.6.8-P-B"
 DEFAULT_TOKENIZER = "core.tokenizer"
 DEFAULT_PARSER = "core.parser"
 
@@ -17,6 +21,12 @@ if __name__ == "__main__":
     for module in PIPELINE:
         FUNCTION_PIPELINE.append(importlib.import_module(module).module_execute)
         #print(module)
+
+    # Reset log file (it keeps appending instead)
+    with open('.log', 'w') as f:
+        f.write(f"""
+Compiler started; timestamp: {datetime.now()}. Version {VERSION}.\n\n\n\n
+""")
     
 
     if sys.argv[1] == '-s':

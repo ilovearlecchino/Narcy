@@ -29,6 +29,7 @@
         "del",
         "if",
         "else",
+        "elif",
         "log"
     ],
     "operators" : [
